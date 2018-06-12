@@ -48,17 +48,25 @@ function displayQuestion(){
     let questionDiv = $('#question');
 
     //Create a new div for the the question and append it to the question div
-    // let questionDisplay = questionDiv.append('<div>');
     let questionDisplay = $('<div>');
     questionDiv.append(questionDisplay);
+
+    //Create a new div for the answers to the question
+    let answersDisplay = $('<div>');
+    answersDisplay.addClass("answers-display");
+    answersDisplay.attr("id", "answers-display");
+    questionDiv.append(answersDisplay);
+
 
     //Create new divs and display answer options 
     for (let i = 0; i < questionsArray.length; i++){
         let answerDiv = $("<div>");
+        answerDiv.addClass("answer-option");
+        answerDiv.attr("id", "answer-option");
         answerDiv.text("hi");
         answerDiv.text(questionsArray[currentQuestionIndex].answersArray[i]);
-        // console.log(questionsArray[currentQuestionIndex].answersArray[i]);
-        questionDiv.append(answerDiv);
+        // questionDiv.append(answerDiv);
+        answersDisplay.append(answerDiv);
 
     }
 
@@ -69,6 +77,21 @@ function displayQuestion(){
 }
 
 
+
+
 //Begin the game 
 initalizeQuestions();
 displayQuestion();
+
+
+//Process clicking on an answer option
+
+// $('#answer-option').on('click', ".answer-option", function(){
+//     console.log("Option was clicked");
+
+// } );
+
+$('#answers-display').on('click', ".answer-option", function(){
+    console.log("Option was clicked");
+
+} );
