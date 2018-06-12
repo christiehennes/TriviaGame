@@ -48,7 +48,19 @@ function displayQuestion(){
     let questionDiv = $('#question');
 
     //Create a new div for the the question and append it to the question div
-    let questionDisplay = questionDiv.append('<div>');
+    // let questionDisplay = questionDiv.append('<div>');
+    let questionDisplay = $('<div>');
+    questionDiv.append(questionDisplay);
+
+    //Create new divs and display answer options 
+    for (let i = 0; i < questionsArray.length; i++){
+        let answerDiv = $("<div>");
+        answerDiv.text("hi");
+        answerDiv.text(questionsArray[currentQuestionIndex].answersArray[i]);
+        // console.log(questionsArray[currentQuestionIndex].answersArray[i]);
+        questionDiv.append(answerDiv);
+
+    }
 
     //Display the text for the question
     questionDisplay.text(questionsArray[currentQuestionIndex].question);
