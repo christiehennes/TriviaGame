@@ -4,15 +4,6 @@ let correctAnswers = 0;
 let incorrectAnswers = 0;
 let unansweredQuestions = 0;
 let currentQuestionIndex = 0;
-
-let triviaQuestion = {
-
-    question: '',
-    answersArray: [],
-    answerIndex: ''
-
-};
-
 let questionsArray = [];
 
 
@@ -27,7 +18,7 @@ function initalizeQuestions() {
 
 }
 
-//Question constructor 
+//Question constructor for a Question object 
 function Question(question, answer1, answer2, answer3, answer4, index){
     
     //Inialize object with values passed into the function
@@ -65,7 +56,6 @@ function displayQuestion(){
         answerDiv.attr("id", "answer-option");
         answerDiv.text("hi");
         answerDiv.text(questionsArray[currentQuestionIndex].answersArray[i]);
-        // questionDiv.append(answerDiv);
         answersDisplay.append(answerDiv);
 
     }
@@ -85,12 +75,6 @@ displayQuestion();
 
 
 //Process clicking on an answer option
-
-// $('#answer-option').on('click', ".answer-option", function(){
-//     console.log("Option was clicked");
-
-// } );
-
 $('#answers-display').on('click', ".answer-option", function(){
     console.log("Option was clicked");
 
