@@ -6,6 +6,75 @@ let unansweredQuestions = 0;
 let currentQuestionIndex = 0;
 let questionsArray = [];
 
+//Create the timer object 
+
+//  Variable that will hold our setInterval that runs the stopwatch
+let intervalId;
+
+// prevents the clock from being sped up unnecessarily
+let clockRunning = false;
+
+let stopwatch = {
+
+    time: 30,
+  
+    reset: function() {
+  
+      stopwatch.time = 30;
+  
+      $("#timer").text("00:30");
+
+    },
+    start: function() {
+  
+      // DONE: Use setInterval to start the count here and set the clock to running.
+      if (!clockRunning) {
+        intervalId = setInterval(stopwatch.count, 1000);
+        clockRunning = true;
+      }
+    },
+    stop: function() {
+  
+      // DONE: Use clearInterval to stop the count here and set the clock to not be running.
+      clearInterval(intervalId);
+      clockRunning = false;
+    },
+    count: function() {
+  
+      // Decrement time by 1 to count down
+      stopwatch.time--;
+  
+      // DONE: Get the current time, pass that into the stopwatch.timeConverter function,
+      //       and save the result in a variable.
+    //   var converted = stopwatch.timeConverter(stopwatch.time);
+      var timeFormat= "00:"+stopwatch.time;
+      console.log(timeFormat);
+  
+      // DONE: Use the variable we just created to show the converted time in the "display" div.
+      $("#timer").text(timeFormat);
+    },
+    // timeConverter: function(t) {
+  
+    // //   var minutes = Math.floor(t / 60);
+    // //   console.log(minutes);
+    //   var seconds = t - (minutes * 60);
+    //   console.log(seconds);
+  
+    //   if (seconds < 10) {
+    //     seconds = "0" + seconds;
+    //   }
+  
+    // //   if (minutes === 0) {
+    // //     minutes = "00";
+    // //   }
+    // //   else if (minutes < 10) {
+    // //     minutes = "0" + minutes;
+    // //   }
+  
+    //   return "00:" + seconds;
+    // }
+  };
+
 
 //Initalize Trivia Questions
 
@@ -35,6 +104,8 @@ function displayQuestion(){
 
     console.log("Inside displayQuestion");
 
+    let timer = stopwatch.start();
+
     //Grab the current div for the question
     let questionDiv = $('#question');
 
@@ -54,8 +125,9 @@ function displayQuestion(){
         let answerDiv = $("<div>");
         answerDiv.addClass("answer-option");
         answerDiv.attr("id", "answer-option");
-        answerDiv.text("hi");
+        answerDiv.attr("index-value", i);
         answerDiv.text(questionsArray[currentQuestionIndex].answersArray[i]);
+        // console.log(questionsArray[currentQuestionIndex].answersArray[i]);
         answersDisplay.append(answerDiv);
 
     }
@@ -76,6 +148,10 @@ displayQuestion();
 
 //Process clicking on an answer option
 $('#answers-display').on('click', ".answer-option", function(){
-    console.log("Option was clicked");
+   //TODO grab the value of which button you just clicked on 
+   console.log("Option was clicked" + $(this).attr('index-value'));
+
+
+   
 
 } );
