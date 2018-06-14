@@ -46,9 +46,16 @@ let stopwatch = {
   
       // DONE: Get the current time, pass that into the stopwatch.timeConverter function,
       //       and save the result in a variable.
-    //   var converted = stopwatch.timeConverter(stopwatch.time);
-      var timeFormat= "00:"+stopwatch.time;
-      //console.log(timeFormat);
+
+      let timeFormat = '';
+
+    if(stopwatch.time < 10){
+        timeFormat= "00:0"+stopwatch.time;
+    }
+    else{
+        timeFormat= "00:"+stopwatch.time;
+    }
+     
   
       // DONE: Use the variable we just created to show the converted time in the "display" div.
       $("#timer").text(timeFormat);
@@ -123,7 +130,6 @@ function displayQuestion(){
 
 
         //Create new divs and display answer options 
-        // for (let i = 0; i < questionsArray.length; i++){
         for (let i = 0; i < questionsArray[currentQuestionIndex].answersArray.length; i++){
             let answerDiv = $("<div>");
             answerDiv.addClass("answer-option");
@@ -136,10 +142,7 @@ function displayQuestion(){
 
         //Display the text for the question
         questionDisplay.text(questionsArray[currentQuestionIndex].question);
-        //console.log(questionsArray);
-
-        // //Incrament the question Index for the next time you display a question
-        // currentQuestionIndex++;
+ 
 
     }
     else{
