@@ -35,7 +35,7 @@ let stopwatch = {
     },
     stop: function() {
   
-      // DONE: Use clearInterval to stop the count here and set the clock to not be running.
+      //Use clearInterval to stop the count and set the clock to not be running.
       clearInterval(intervalId);
       clockRunning = false;
     },
@@ -54,31 +54,21 @@ let stopwatch = {
       $("#timer").text(timeFormat);
 
       if(stopwatch.time === 0){
-        //   window.alert("Times up!");
-          stopwatch.stop();
+
+        //Check to see if the game is over
+
+        if(!isGameOver()){
+            console.log("Here");
+            incorrectGuess(questionsArray[currentQuestionIndex].answerIndex, true);
+        }
+        else{
+            displayGameOver();
+        }
+       
       }
-    },
-    // timeConverter: function(t) {
-  
-    // //   var minutes = Math.floor(t / 60);
-    // //   console.log(minutes);
-    //   var seconds = t - (minutes * 60);
-    //   console.log(seconds);
-  
-    //   if (seconds < 10) {
-    //     seconds = "0" + seconds;
-    //   }
-  
-    // //   if (minutes === 0) {
-    // //     minutes = "00";
-    // //   }
-    // //   else if (minutes < 10) {
-    // //     minutes = "0" + minutes;
-    // //   }
-  
-    //   return "00:" + seconds;
-    // }
+    }
   };
+
 
 
 //Initalize Trivia Questions
@@ -87,8 +77,8 @@ function initalizeQuestions() {
 
     new Question("Question 1: What is the answer?", "Answer 1", "Answer 2", "Answer 3", "Answer 4", 1);
     new Question("Question 2: What is the answer?", "Answer 1", "Answer 2", "Answer 3", "Answer 4", 1);
-    new Question("Question 3: What is the answer?", "Answer 1", "Answer 2", "Answer 3", "Answer 4", 1);
-    new Question("Question 4: What is the answer?", "Answer 1", "Answer 2", "Answer 3", "Answer 4", 1);
+    // new Question("Question 3: What is the answer?", "Answer 1", "Answer 2", "Answer 3", "Answer 4", 1);
+    // new Question("Question 4: What is the answer?", "Answer 1", "Answer 2", "Answer 3", "Answer 4", 1);
 
 }
 
@@ -107,70 +97,182 @@ function Question(question, answer1, answer2, answer3, answer4, index){
 
 function displayQuestion(){
 
-    console.log("Inside displayQuestion");
+    //Check to see if the game is over before displaying the next question or else display the game over screen
+    if(!isGameOver()){
 
-    stopwatch.reset();
-    stopwatch.start();
+        //console.log("Inside displayQuestion");
 
-    //Grab the current div for the question
-    let questionDiv = $('#question');
+        stopwatch.reset();
+        stopwatch.start();
 
-    //Create a new div for the the question and append it to the question div
-    let questionDisplay = $('<div>');
-    questionDiv.append(questionDisplay);
+        //Grab the current div for the question
+        let questionDiv = $('#question');
 
-    //Create a new div for the answers to the question
-    let answersDisplay = $('<div>');
-    answersDisplay.addClass("answers-display");
-    answersDisplay.attr("id", "answers-display");
-    questionDiv.append(answersDisplay);
+        //Clear out the question div to start
+        questionDiv.html('');
+
+        //Create a new div for the the question and append it to the question div
+        let questionDisplay = $('<div>');
+        questionDiv.append(questionDisplay);
+
+        //Create a new div for the answers to the question
+        let answersDisplay = $('<div>');
+        answersDisplay.addClass("answers-display");
+        answersDisplay.attr("id", "answers-display");
+        questionDiv.append(answersDisplay);
 
 
-    //Create new divs and display answer options 
-    for (let i = 0; i < questionsArray.length; i++){
-        let answerDiv = $("<div>");
-        answerDiv.addClass("answer-option");
-        answerDiv.attr("id", "answer-option");
-        answerDiv.attr("index-value", i);
-        answerDiv.text(questionsArray[currentQuestionIndex].answersArray[i]);
-        // console.log(questionsArray[currentQuestionIndex].answersArray[i]);
-        answersDisplay.append(answerDiv);
+        //Create new divs and display answer options 
+        // for (let i = 0; i < questionsArray.length; i++){
+        for (let i = 0; i < questionsArray[currentQuestionIndex].answersArray.length; i++){
+            let answerDiv = $("<div>");
+            answerDiv.addClass("answer-option");
+            answerDiv.attr("id", "answer-option");
+            answerDiv.attr("index-value", i);
+            answerDiv.text(questionsArray[currentQuestionIndex].answersArray[i]);
+            answersDisplay.append(answerDiv);
+
+        }
+
+        //Display the text for the question
+        questionDisplay.text(questionsArray[currentQuestionIndex].question);
+        //console.log(questionsArray);
+
+        // //Incrament the question Index for the next time you display a question
+        // currentQuestionIndex++;
 
     }
-
-    //Display the text for the question
-    questionDisplay.text(questionsArray[currentQuestionIndex].question);
-    console.log(questionsArray);
-
-    //Incrament the question Index for the next time you display a question
-    currentQuestionIndex++;
-
+    else{
+        displayGameOver();
+    }
 }
 
 function processGuess(guess, answerIndex){
 
-    console.log("This was the guess: " + guess);
-    console.log("This was the actual answer: " + answerIndex);
+    //console.log("This was the guess: " + guess);
+    //console.log("This was the actual answer: " + answerIndex);
 
     //Check to see if the guess matches the actual trivia answer 
     if (parseInt(guess) === parseInt(answerIndex)){
-        correctGuess();
+        correctGuess(answerIndex);
     }
     else { 
-        incorrectGuess(); 
+        incorrectGuess(answerIndex, false); 
     }
 
 }
 
 //Function to process a correct guess 
-function correctGuess(){
-    console.log("Correct guess");
+function correctGuess(answerIndex){
+    stopwatch.stop();
+    correctAnswers++;
+
+    //Clear out current question div 
+    $('#question').html('');
+
+    //Display a congratulations message
+
+    let congratsDiv = $(`
+        <div class="results-div">
+            <div> Congrats! You guessed correctly. </div>
+            <div> Your answer was ${questionsArray[currentQuestionIndex].answersArray[answerIndex]}. </div>
+
+        </div>
+        
+        `);
+
+        $('#question').append(congratsDiv);
+
+        nextQuestionTimer();
 
 }
 
 //Function to process an incorrect guess 
-function incorrectGuess(){
-    console.log("Incorrect guess");
+function incorrectGuess(answerIndex, didTimeout){
+    stopwatch.stop();
+
+    //Create string to hold default incorrect guess text
+    let message = "Sorry! That wasn't the correct answer.";
+
+    if(didTimeout){
+        unansweredQuestions++;
+        //console.log("You ran out of time");
+        message = "Oops! You ran out of time."
+    }
+    else{ 
+        incorrectAnswers++;
+    }
+
+    //Clear out the contents of the question div
+    $('#question').html('');
+
+    //Create new messaging for incorrect guess or a timeout guess
+    let incorrectGuessDiv = $(`
+        <div class="results-div">
+            <div>${message}</div>
+            <div> The correct answer was ${questionsArray[currentQuestionIndex].answersArray[answerIndex]}. </div>
+
+        </div>
+        
+        `);
+
+        $('#question').append(incorrectGuessDiv);
+    
+    //Begin the timer to count down to display the next question    
+    nextQuestionTimer();
+
+}
+
+//Function for when someone runs out of time
+function nextQuestionTimer(){
+    setTimeout(displayQuestion, 3000);
+
+    //Incrament the question Index for the next time you display a question
+    currentQuestionIndex++;
+}
+
+//Function for when game is over 
+function isGameOver(){
+
+    if (currentQuestionIndex === questionsArray.length){
+        console.log("game over!");
+        return true;
+    }
+
+    else return false;
+
+}
+
+function displayGameOver(){
+    console.log("Inside of displayGameOVer");
+
+    //Stop the timer 
+    stopwatch.stop();
+
+    //Clear out current timer and question / answer content 
+    $('#timer').html('');
+    $('#question').html('');
+
+    let gameOverDiv = $(`
+    
+    <div results-div> Game over! </div>
+    <div> Results </div>
+    <div> Total Correct Answers: ${correctAnswers} </div>
+    <div> Total Incorrect Answers: ${incorrectAnswers} </div>
+    <div> Total Unanswered Answers: ${unansweredQuestions} </div>
+    <button class="start-over-button" id="start-over"> Star Over </button>
+    
+    `);
+
+    $('#question').append(gameOverDiv);
+
+
+    $(document).on('click', '.start-over-button', function(){
+        console.log("here");
+        currentQuestionIndex = 0;
+        displayQuestion();
+    })
+
 
 }
 
@@ -182,12 +284,14 @@ displayQuestion();
 
 
 //Process clicking on an answer option
-$('#answers-display').on('click', ".answer-option", function(){
-   //TODO grab the value of which button you just clicked on 
-   console.log("Option was clicked" + $(this).attr('index-value'));
-   processGuess( $(this).attr('index-value'), questionsArray[currentQuestionIndex].answerIndex);
+
+    $(document).on('click', ".answer-option", function(){
+        //TODO grab the value of which button you just clicked on 
+        console.log("Option was clicked" + $(this).attr('index-value'));
+        console.log(questionsArray[currentQuestionIndex]);
+        console.log("Actual answer: " + questionsArray[currentQuestionIndex].answerIndex);
+        processGuess( $(this).attr('index-value'), questionsArray[currentQuestionIndex].answerIndex);
+     
+     } );
 
 
-   
-
-} );
