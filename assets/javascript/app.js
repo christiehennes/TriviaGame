@@ -16,13 +16,13 @@ let clockRunning = false;
 
 let stopwatch = {
 
-    time: 30,
+    time: 10,
   
     reset: function() {
   
-      stopwatch.time = 30;
+      stopwatch.time = 10;
   
-      $("#timer").text("00:30");
+      $("#timer").text("00:10");
 
     },
     start: function() {
@@ -48,10 +48,15 @@ let stopwatch = {
       //       and save the result in a variable.
     //   var converted = stopwatch.timeConverter(stopwatch.time);
       var timeFormat= "00:"+stopwatch.time;
-      console.log(timeFormat);
+      //console.log(timeFormat);
   
       // DONE: Use the variable we just created to show the converted time in the "display" div.
       $("#timer").text(timeFormat);
+
+      if(stopwatch.time === 0){
+        //   window.alert("Times up!");
+          stopwatch.stop();
+      }
     },
     // timeConverter: function(t) {
   
@@ -104,7 +109,8 @@ function displayQuestion(){
 
     console.log("Inside displayQuestion");
 
-    let timer = stopwatch.start();
+    stopwatch.reset();
+    stopwatch.start();
 
     //Grab the current div for the question
     let questionDiv = $('#question');
@@ -136,8 +142,37 @@ function displayQuestion(){
     questionDisplay.text(questionsArray[currentQuestionIndex].question);
     console.log(questionsArray);
 
+    //Incrament the question Index for the next time you display a question
+    currentQuestionIndex++;
+
 }
 
+function processGuess(guess, answerIndex){
+
+    console.log("This was the guess: " + guess);
+    console.log("This was the actual answer: " + answerIndex);
+
+    //Check to see if the guess matches the actual trivia answer 
+    if (parseInt(guess) === parseInt(answerIndex)){
+        correctGuess();
+    }
+    else { 
+        incorrectGuess(); 
+    }
+
+}
+
+//Function to process a correct guess 
+function correctGuess(){
+    console.log("Correct guess");
+
+}
+
+//Function to process an incorrect guess 
+function incorrectGuess(){
+    console.log("Incorrect guess");
+
+}
 
 
 
@@ -150,6 +185,7 @@ displayQuestion();
 $('#answers-display').on('click', ".answer-option", function(){
    //TODO grab the value of which button you just clicked on 
    console.log("Option was clicked" + $(this).attr('index-value'));
+   processGuess( $(this).attr('index-value'), questionsArray[currentQuestionIndex].answerIndex);
 
 
    
