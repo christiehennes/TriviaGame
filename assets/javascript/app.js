@@ -82,10 +82,11 @@ let stopwatch = {
 
 function initalizeQuestions() {
 
-    new Question("Question 1: What is the answer?", "Answer 1", "Answer 2", "Answer 3", "Answer 4", 1);
-    new Question("Question 2: What is the answer?", "Answer 1", "Answer 2", "Answer 3", "Answer 4", 1);
-    // new Question("Question 3: What is the answer?", "Answer 1", "Answer 2", "Answer 3", "Answer 4", 1);
-    // new Question("Question 4: What is the answer?", "Answer 1", "Answer 2", "Answer 3", "Answer 4", 1);
+    new Question("What is the tallest building in New York?", "Empire State Building", "Chrysler Building", "One World Trade Center", "Bank of America Tower", 2);
+    new Question("What is New York City's largest train station?", "Madison Square Garden", "Grand Central Station", "Times Square", "Port Authority", 1);
+    new Question("The Statue of Liberty was a gift from what country?", "Spain", "Germany", "England", "France", 3);
+    new Question("What is the longest-running Broadway show of all-time?", "Phantom of the Opera", "Peter Pan", "Les Misérables", "Mamma Mia", 0);
+    new Question("Which store does not exist in New York City?", "Target", "Walmart", "Home Depot", "Lowes", 1);
 
 }
 
@@ -140,8 +141,13 @@ function displayQuestion(){
 
         }
 
+
         //Display the text for the question
         questionDisplay.text(questionsArray[currentQuestionIndex].question);
+
+
+        //Display the question number in the upper lefthand corner 
+        $('#question-header').html("Question " + (currentQuestionIndex+1));
  
 
     }
@@ -263,6 +269,7 @@ function displayGameOver(){
     <div> Total Correct Answers: ${correctAnswers} </div>
     <div> Total Incorrect Answers: ${incorrectAnswers} </div>
     <div> Total Unanswered Answers: ${unansweredQuestions} </div>
+    <br>
     <button class="start-over-button" id="start-over"> Star Over </button>
     
     `);
@@ -271,7 +278,7 @@ function displayGameOver(){
 
 
     $(document).on('click', '.start-over-button', function(){
-        console.log("here");
+        // console.log("here");
         currentQuestionIndex = 0;
         displayQuestion();
     })
@@ -279,11 +286,35 @@ function displayGameOver(){
 
 }
 
+function beginGame(){
+
+    let beginGameDiv = $(`
+    
+    <div> Press the button below to begin the trivia game! </div>
+    <br>
+    <button class="begin-game-button" id="begin-game"> Start </button>
+    
+    `);
+
+    $('#question').append(beginGameDiv);
+
+
+    $(document).on('click', '.begin-game-button', function(){
+        // console.log("here");
+        initalizeQuestions();
+        displayQuestion();
+    })
+
+
+
+}
+
 
 
 //Begin the game 
-initalizeQuestions();
-displayQuestion();
+// initalizeQuestions();
+// displayQuestion();
+beginGame();
 
 
 //Process clicking on an answer option
