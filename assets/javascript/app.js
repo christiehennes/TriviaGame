@@ -8,10 +8,10 @@ let questionsArray = [];
 
 //Create the timer object 
 
-//  Variable that will hold our setInterval that runs the stopwatch
+//Variable that will hold our setInterval that runs the stopwatch
 let intervalId;
 
-// prevents the clock from being sped up unnecessarily
+//Prevents the clock from being sped up unnecessarily
 let clockRunning = false;
 
 let stopwatch = {
@@ -19,15 +19,12 @@ let stopwatch = {
     time: 20,
   
     reset: function() {
-  
       stopwatch.time = 20;
-  
       $("#timer").text("00:20");
-
     },
     start: function() {
   
-      // DONE: Use setInterval to start the count here and set the clock to running.
+      //Use setInterval to start the count here and set the clock to running
       if (!clockRunning) {
         intervalId = setInterval(stopwatch.count, 1000);
         clockRunning = true;
@@ -35,7 +32,7 @@ let stopwatch = {
     },
     stop: function() {
   
-      //Use clearInterval to stop the count and set the clock to not be running.
+      //Use clearInterval to stop the count and set the clock to not be running
       clearInterval(intervalId);
       clockRunning = false;
     },
@@ -46,23 +43,22 @@ let stopwatch = {
   
       let timeFormat = '';
 
-    if(stopwatch.time < 10){
-        timeFormat= "00:0"+stopwatch.time;
-    }
-    else{
-        timeFormat= "00:"+stopwatch.time;
-    }
+      //Format it properly for seconds
+        if(stopwatch.time < 10){
+            timeFormat= "00:0"+stopwatch.time;
+        }
+        else{
+            timeFormat= "00:"+stopwatch.time;
+        }
      
   
-      // DONE: Use the variable we just created to show the converted time in the "display" div.
+      //Display the timer in the div 
       $("#timer").text(timeFormat);
 
+      //When the timer runs out, check to see if the game is over or go to the next game
       if(stopwatch.time === 0){
 
-        //Check to see if the game is over
-
         if(!isGameOver()){
-            console.log("Here");
             incorrectGuess(questionsArray[currentQuestionIndex].answerIndex, true);
         }
         else{
@@ -136,15 +132,11 @@ function displayQuestion(){
 
         }
 
-
         //Display the text for the question
         questionDisplay.text(questionsArray[currentQuestionIndex].question);
 
-
         //Display the question number in the upper lefthand corner 
         $('#question-header').html("Question " + (currentQuestionIndex+1));
- 
-
     }
     else{
         displayGameOver();
@@ -172,10 +164,9 @@ function correctGuess(answerIndex){
     $('#question').html('');
 
     //Display a congratulations message
-
     let congratsDiv = $(`
         <div class="results-div">
-            <div> Congrats! You guessed correctly. </div>
+            <h4> Congrats! You guessed correctly. </h4>
             <div> Your answer was ${questionsArray[currentQuestionIndex].answersArray[answerIndex]}. </div>
 
         </div>
@@ -184,6 +175,7 @@ function correctGuess(answerIndex){
 
         $('#question').append(congratsDiv);
 
+        //Begin the timer for the next question
         nextQuestionTimer();
 
 }
@@ -195,9 +187,9 @@ function incorrectGuess(answerIndex, didTimeout){
     //Create string to hold default incorrect guess text
     let message = "Sorry! That wasn't the correct answer.";
 
+    //Change the message if you ran out of time instead of incorrect answer 
     if(didTimeout){
         unansweredQuestions++;
-        //console.log("You ran out of time");
         message = "Oops! You ran out of time."
     }
     else{ 
@@ -210,7 +202,7 @@ function incorrectGuess(answerIndex, didTimeout){
     //Create new messaging for incorrect guess or a timeout guess
     let incorrectGuessDiv = $(`
         <div class="results-div">
-            <div>${message}</div>
+            <h4>${message}</h4>
             <div> The correct answer was ${questionsArray[currentQuestionIndex].answersArray[answerIndex]}. </div>
 
         </div>
@@ -226,7 +218,9 @@ function incorrectGuess(answerIndex, didTimeout){
 
 //Function for when someone runs out of time
 function nextQuestionTimer(){
-    setTimeout(displayQuestion, 3000);
+
+    //Switch the screen in 5 seconds 
+    setTimeout(displayQuestion, 5000);
 
     //Incrament the question Index for the next time you display a question
     currentQuestionIndex++;
@@ -235,8 +229,8 @@ function nextQuestionTimer(){
 //Function for when game is over 
 function isGameOver(){
 
+    //If our current question is the same as the array length, then we ran out of questions and the game is over
     if (currentQuestionIndex === questionsArray.length){
-        console.log("game over!");
         return true;
     }
 
@@ -244,8 +238,8 @@ function isGameOver(){
 
 }
 
+//Function to display the game over screen
 function displayGameOver(){
-    console.log("Inside of displayGameOVer");
 
     //Stop the timer 
     stopwatch.stop();
@@ -256,7 +250,7 @@ function displayGameOver(){
 
     let gameOverDiv = $(`
     
-    <div results-div> Game over! </div>
+    <h4 results-div> Game over! </h4>
     <div> Results </div>
     <div> Total Correct Answers: ${correctAnswers} </div>
     <div> Total Incorrect Answers: ${incorrectAnswers} </div>
@@ -268,7 +262,7 @@ function displayGameOver(){
 
     $('#question').append(gameOverDiv);
 
-
+    //Click handler for start over button
     $(document).on('click', '.start-over-button', function(){
         currentQuestionIndex = 0;
         displayQuestion();
@@ -277,6 +271,7 @@ function displayGameOver(){
 
 }
 
+//Function to begin the game and display the start button
 function beginGame(){
 
     let beginGameDiv = $(`
@@ -290,8 +285,8 @@ function beginGame(){
     $('#question').append(beginGameDiv);
 
 
+    //Click handler for the start button
     $(document).on('click', '.begin-game-button', function(){
-        // console.log("here");
         initalizeQuestions();
         displayQuestion();
     })
@@ -305,10 +300,6 @@ beginGame();
 
 //Process clicking on an answer option
     $(document).on('click', ".answer-option", function(){
-        //TODO grab the value of which button you just clicked on 
-        console.log("Option was clicked" + $(this).attr('index-value'));
-        console.log(questionsArray[currentQuestionIndex]);
-        console.log("Actual answer: " + questionsArray[currentQuestionIndex].answerIndex);
         processGuess( $(this).attr('index-value'), questionsArray[currentQuestionIndex].answerIndex);
      } );
 
