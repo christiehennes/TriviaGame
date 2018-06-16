@@ -17,5 +17,6 @@
  * I stored those question objects in an array and use a counter index to determine which question we are currently on
  * All of the answers are stored in an array associated with its Question object 
  * There are a series of functions that build off one another to play the game, start game, check if the game is lost, next question, etc
+ * I used Bootstraps card component and grid to layout my game and make it mobile responsive
  
  
